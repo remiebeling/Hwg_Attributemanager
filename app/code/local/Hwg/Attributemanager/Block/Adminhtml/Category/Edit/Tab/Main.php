@@ -136,18 +136,18 @@ class Hwg_Attributemanager_Block_Adminhtml_Category_Edit_Tab_Main extends Mage_A
     ));
 
     $resource = Mage::getSingleton('core/resource');
-
-
-    $entityType = Mage::getModel('eav/config')->getEntityType('catalog_category');
+    $connection = $resource->getConnection('core_read');
+    $configmodel = Mage::getModel('eav/config'); 
+    $entityType = $configmodel->getEntityType('catalog_category');
     $entityTypeId = $entityType->getEntityTypeId();
     $readConnection = $resource->getConnection('core_read');
-    $attribute = Mage::getModel('eav/config')->getAttribute('catalog_category', 'description');
+    $attribute = $configmodel->getAttribute('catalog_category', 'description');
     // get group sort_oder from Attr: Description
-    $select = $resource->getConnection('core_read')->select()
+    $select = $connection->select()
             ->from($resource->getTableName('eav/entity_attribute'))
             ->where('entity_type_id = ?', $entityTypeId)
             ->where('attribute_id = ?', $attribute->getId());
-    $item = $resource->getConnection('core_read')->fetchRow($select);
+    $item = $connection->fetchRow($select);
     
     $fieldset->addField('attribute_group_id', 'hidden', array(
         'name' => 'attribute_group_id',
